@@ -72,8 +72,7 @@ public class ChessApplicationEventListener implements ApplicationListener<ChessE
             if (alert.isGameStart()) {
                 log.info("Received a game start alert for game {}, with opponent {} . . .", gameId, opponentName);
                 this.boardService.subscribeToStreamOf(gameId);
-                log.info("Successfully joined game {}, with opponent {}. Bot will commence making moves on behalf of L3m0nJeezy. Best of luck to {}.",
-                        gameId, opponentName, opponentName);
+                log.info("Successfully joined game {}, with opponent {}.", gameId, opponentName);
             } else {
                 log.info("Cleaning up finished game {} with {} . . .", gameId, opponentName);
                 if (this.games.containsKey(gameId)) {

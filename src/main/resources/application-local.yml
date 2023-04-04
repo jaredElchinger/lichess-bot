@@ -1,0 +1,9 @@
+lichess:
+  web:
+    base-url: https://lichess.org/api
+    personal-token: <insert personal token here>
+    personal-username: <insert username here>
+
+application:
+  version: 1.0.0
+  title: Lichess Bot Local Mayhem

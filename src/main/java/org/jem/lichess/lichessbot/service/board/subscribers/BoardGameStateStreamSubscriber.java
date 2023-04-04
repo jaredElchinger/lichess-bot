@@ -1,7 +1,6 @@
 package org.jem.lichess.lichessbot.service.board.subscribers;
 
 import com.google.gson.Gson;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jem.lichess.lichessbot.chess.model.GameStateChange;
 import org.jem.lichess.lichessbot.chess.model.GameStateChangeEvent;
@@ -9,6 +8,7 @@ import org.jem.lichess.lichessbot.service.board.model.BoardGameStateEvent;
 import org.jem.lichess.lichessbot.service.board.model.GameState;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
@@ -22,12 +22,19 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class BoardGameStateStreamSubscriber implements Subscriber<DataBuffer> {
 
     private final ApplicationEventPublisher applicationEventPublisher;
+
+    private final String username;
+
+    public BoardGameStateStreamSubscriber(ApplicationEventPublisher applicationEventPublisher,
+                                          @Value("${lichess.web.personal-username}") String username) {
+        this.applicationEventPublisher = applicationEventPublisher;
+        this.username = username;
+    }
 
     private String gameId;
 
@@ -106,7 +113,7 @@ public class BoardGameStateStreamSubscriber implements Subscriber<DataBuffer> {
             change.setBtime(state.getBtime());
             change.setStatus(state.getStatus().name());
             final String name = event.getWhite().getId();
-            change.setWhite(name != null && name.equalsIgnoreCase("l3m0nj33zy"));
+            change.setWhite(name != null && name.equalsIgnoreCase(this.username));
             change.setFullGameEvent(true);
         } else {
             log.error("Error processing game state for gameFull type, state was: {}", state == null ? "null" : state.toString());
