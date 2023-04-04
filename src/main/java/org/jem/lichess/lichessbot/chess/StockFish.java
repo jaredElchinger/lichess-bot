@@ -85,8 +85,11 @@ public class StockFish {
     @SneakyThrows
     public String getBestMove(long waitTime, String moves, long wtime, long btime, long winc, long binc) {
         sendCommand(String.format("position startpos moves %s", moves));
-        final String getMoveCommand = String.format("go movetime %s wtime %s btime %s winc %s binc %s",
-                waitTime, wtime, btime, winc, binc);
+
+        String getMoveCommand = String.format("go wtime %s btime %s winc %s binc %s", wtime, btime, winc, binc);
+        if (waitTime > 0) {
+            getMoveCommand += String.format(" movetime %s", waitTime);
+        }
         sendCommand(getMoveCommand);
 
         final String output = getOutput("bestmove");

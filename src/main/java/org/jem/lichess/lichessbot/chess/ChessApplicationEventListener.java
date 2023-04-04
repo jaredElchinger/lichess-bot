@@ -1,7 +1,6 @@
 package org.jem.lichess.lichessbot.chess;
 
 import jakarta.annotation.PreDestroy;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jem.lichess.lichessbot.chess.model.ChessEvent;
 import org.jem.lichess.lichessbot.chess.model.GameAlert;
@@ -9,6 +8,7 @@ import org.jem.lichess.lichessbot.chess.model.GameAlertEvent;
 import org.jem.lichess.lichessbot.chess.model.GameStateChange;
 import org.jem.lichess.lichessbot.chess.model.GameStateChangeEvent;
 import org.jem.lichess.lichessbot.service.board.BoardService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Retryable;
@@ -20,11 +20,22 @@ import java.util.function.Consumer;
 
 @Slf4j
 @EnableRetry
-@RequiredArgsConstructor
 @Service
 public class ChessApplicationEventListener implements ApplicationListener<ChessEvent> {
 
     private final BoardService boardService;
+
+    private final long correspondenceMinTimeMs;
+
+    private final long correspondenceMaxTimeMs;
+
+    public ChessApplicationEventListener(BoardService boardService,
+                                         @Value("${lichess.if-correspondence.min-move-time-ms:5000}") long correspondenceMinTimeMs,
+                                         @Value("${lichess.if-correspondence.max-move-time-ms:10000}") long correspondenceMaxTimeMs) {
+        this.boardService = boardService;
+        this.correspondenceMinTimeMs = correspondenceMinTimeMs;
+        this.correspondenceMaxTimeMs = correspondenceMaxTimeMs;
+    }
 
     private final Map<String, ChessGame> games = new ConcurrentHashMap<>();
 
@@ -55,6 +66,11 @@ public class ChessApplicationEventListener implements ApplicationListener<ChessE
             if (change.isFullGameEvent()) {
                 final ChessGame newGame = new ChessGame(change.isWhite());
                 newGame.createGame();
+                newGame.setUnlimitedTime(change.getUnlimitedTime());
+                if (change.getUnlimitedTime()) {
+                    newGame.setMinMoveTimeMs(this.correspondenceMinTimeMs);
+                    newGame.setMaxMoveTimeMs(this.correspondenceMaxTimeMs);
+                }
                 this.performMove(newGame, change);
                 this.games.put(gameId, newGame);
             } else {

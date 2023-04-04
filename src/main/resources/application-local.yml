@@ -3,6 +3,9 @@ lichess:
     base-url: https://lichess.org/api
     personal-token: <insert personal token here>
     personal-username: <insert username here>
+  if-correspondence:
+    min-move-time-ms: 5000
+    max-move-time-ms: 10000
 
 application:
   version: 1.0.0

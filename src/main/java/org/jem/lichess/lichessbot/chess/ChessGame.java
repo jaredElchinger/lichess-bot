@@ -2,6 +2,7 @@ package org.jem.lichess.lichessbot.chess;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jem.lichess.lichessbot.utilities.Random;
@@ -12,6 +13,15 @@ import org.jem.lichess.lichessbot.utilities.Random;
 public class ChessGame {
 
     private final boolean playForWhite;
+
+    @Setter
+    private boolean unlimitedTime;
+
+    @Setter
+    private long minMoveTimeMs = 5000;
+
+    @Setter
+    private long maxMoveTimeMs = 10000;
 
     private StockFish stockFish;
 
@@ -39,7 +49,11 @@ public class ChessGame {
     }
 
     public String getCurrentBestMoveFrom(final String moves, long wtime, long btime, long winc, long binc) {
-        return this.stockFish.getBestMove(Random.longBetween(3000, 10000), moves, wtime, btime, winc, binc);
+        long waitTime = -1;
+        if (this.unlimitedTime) {
+            waitTime = Random.longBetween(this.minMoveTimeMs, this.maxMoveTimeMs);
+        }
+        return this.stockFish.getBestMove(waitTime, moves, wtime, btime, winc, binc);
     }
 
     public void stopStockFish() {

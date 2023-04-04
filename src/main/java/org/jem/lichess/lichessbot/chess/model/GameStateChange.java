@@ -18,5 +18,6 @@ public class GameStateChange {
     private String status;
     private boolean white;
     private boolean isFullGameEvent;
+    private Boolean unlimitedTime;
 
 }

@@ -6,6 +6,7 @@ import org.jem.lichess.lichessbot.chess.model.GameStateChange;
 import org.jem.lichess.lichessbot.chess.model.GameStateChangeEvent;
 import org.jem.lichess.lichessbot.service.board.model.BoardGameStateEvent;
 import org.jem.lichess.lichessbot.service.board.model.GameState;
+import org.jem.lichess.lichessbot.service.common.model.Speed;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Value;
@@ -115,6 +116,7 @@ public class BoardGameStateStreamSubscriber implements Subscriber<DataBuffer> {
             final String name = event.getWhite().getId();
             change.setWhite(name != null && name.equalsIgnoreCase(this.username));
             change.setFullGameEvent(true);
+            change.setUnlimitedTime(Speed.CORRESPONDENCE.equals(event.getSpeed()));
         } else {
             log.error("Error processing game state for gameFull type, state was: {}", state == null ? "null" : state.toString());
             throw new IllegalArgumentException("Expected state to not be null and of type gameState.");
