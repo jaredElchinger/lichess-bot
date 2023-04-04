@@ -7,6 +7,8 @@ lichess:
     min-move-time-ms: 5000
     max-move-time-ms: 10000
 
+stockfish.executable.path: E:\java\lichess-bot\lichess-bot\lichess-bot\src\main\resources\engine\stockfish_15.1\stockfish.exe
+
 application:
   version: 1.0.0
   title: Lichess Bot Local Mayhem

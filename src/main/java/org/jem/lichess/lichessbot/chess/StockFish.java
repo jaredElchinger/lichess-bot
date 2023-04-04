@@ -1,5 +1,6 @@
 package org.jem.lichess.lichessbot.chess;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,13 +10,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 @Slf4j
+@RequiredArgsConstructor
 public class StockFish {
+
+    private final String path;
 
     private Process engineProcess;
     private BufferedReader processReader;
     private OutputStreamWriter processWriter;
-
-    private static final String PATH = "E:\\java\\lichess-bot\\lichess-bot\\lichess-bot\\src\\main\\resources\\engine\\stockfish_15.1\\stockfish.exe";
 
     /**
      * Starts Stockfish engine as a process and initializes it
@@ -24,7 +26,7 @@ public class StockFish {
      */
     public boolean startEngine() {
         try {
-            engineProcess = Runtime.getRuntime().exec(PATH);
+            engineProcess = Runtime.getRuntime().exec(path);
             processReader = new BufferedReader(new InputStreamReader(engineProcess.getInputStream()));
             processWriter = new OutputStreamWriter(engineProcess.getOutputStream());
         } catch (Exception e) {

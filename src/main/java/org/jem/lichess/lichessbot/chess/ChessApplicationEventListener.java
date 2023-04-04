@@ -25,14 +25,18 @@ public class ChessApplicationEventListener implements ApplicationListener<ChessE
 
     private final BoardService boardService;
 
+    private final String pathToStockFish;
+
     private final long correspondenceMinTimeMs;
 
     private final long correspondenceMaxTimeMs;
 
     public ChessApplicationEventListener(BoardService boardService,
+                                         @Value("${stockfish.executable.path}") String pathToStockFish,
                                          @Value("${lichess.if-correspondence.min-move-time-ms:5000}") long correspondenceMinTimeMs,
                                          @Value("${lichess.if-correspondence.max-move-time-ms:10000}") long correspondenceMaxTimeMs) {
         this.boardService = boardService;
+        this.pathToStockFish = pathToStockFish;
         this.correspondenceMinTimeMs = correspondenceMinTimeMs;
         this.correspondenceMaxTimeMs = correspondenceMaxTimeMs;
     }
@@ -64,7 +68,7 @@ public class ChessApplicationEventListener implements ApplicationListener<ChessE
             this.performMove(this.games.get(gameId), change);
         } else {
             if (change.isFullGameEvent()) {
-                final ChessGame newGame = new ChessGame(change.isWhite());
+                final ChessGame newGame = new ChessGame(this.pathToStockFish, change.isWhite());
                 newGame.createGame();
                 newGame.setUnlimitedTime(change.getUnlimitedTime());
                 if (change.getUnlimitedTime()) {

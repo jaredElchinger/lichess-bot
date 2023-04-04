@@ -12,6 +12,8 @@ import org.jem.lichess.lichessbot.utilities.Random;
 @Getter
 public class ChessGame {
 
+    private final String pathToChessEngineExecutable;
+
     private final boolean playForWhite;
 
     @Setter
@@ -28,7 +30,7 @@ public class ChessGame {
     @SneakyThrows
     public void createGame() {
         if (this.stockFish == null) {
-            this.stockFish = new StockFish();
+            this.stockFish = new StockFish(this.pathToChessEngineExecutable);
             if (!this.stockFish.startEngine()) {
                 log.error("Failed to startup stockfish engine . . ");
                 throw new IllegalStateException("Unable to start stockfish engine.");
