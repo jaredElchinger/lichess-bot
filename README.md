@@ -19,7 +19,7 @@ Once best move by StockFish Chess Engine is returned, this information is then r
 * Intellij installed on machine
 * Java 17 or higher installed on machine
 * Apache Maven 3.8 installed on machine
-
+### Running 
 1. Add project as maven project 
 2. Update application-local.yml file with needed information
 * lichess.web.personal-token needs to be populated with personal access token retreived using below section 'Lichess personal Authentication'
