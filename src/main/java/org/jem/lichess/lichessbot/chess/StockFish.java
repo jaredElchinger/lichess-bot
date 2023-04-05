@@ -89,8 +89,10 @@ public class StockFish {
         sendCommand(String.format("position startpos moves %s", moves));
 
         String getMoveCommand = String.format("go wtime %s btime %s winc %s binc %s", wtime, btime, winc, binc);
-        if (waitTime > 0) {
+        if (waitTime > 0 || moves.split(" ").length <= 1) {
             getMoveCommand += String.format(" movetime %s", waitTime);
+        } else if (moves.split(" ").length <= 1) {
+            getMoveCommand += String.format(" movetime %s", "20000"); //For now hard code - so starts don't think so long
         }
         sendCommand(getMoveCommand);
 
