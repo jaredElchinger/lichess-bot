@@ -80,7 +80,7 @@ public class BoardService {
                 .bodyToMono(String.class)
                 .retry(3)
                 .subscribe(s -> {
-                    log.info("Web client successfully posted move {} for game {}, adn received response of: {}.",
+                    log.debug("Web client successfully posted move {} for game {}, and received response of: {}.",
                             move, game, s);
                 }, throwable -> {
                     log.error("Encountered an error during Lichess Board Game api request for game {} and move request of {}, ", game, move, throwable);
